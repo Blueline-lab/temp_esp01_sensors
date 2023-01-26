@@ -1,14 +1,14 @@
 #include "DHT.h"
 #include "PubSubClient.h" // Connect and publish to the MQTT broker
-#include "ESP8266WiFi.h"  // Enables the ESP8266 to connect to the local network (via WiFi)
-#define DHTPIN 2       // Pin connected to the DHT sensor
+#include "ESP8266WiFi.h"  // Enables the ESP8266 to connect to the local network 
+#define DHTPIN 2       // Pin connected to the DHT sensor.
 
-#define DHTTYPE DHT11  // DHT11 or DHT22
+#define DHTTYPE DHT11  // DHT11 , DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
 // WiFi
-const char* ssid = "Wifi";                 // Your personal network SSID
-const char* wifi_password = "93435208"; // Your personal network password
+const char* ssid = "";                 
+const char* wifi_password = ""; 
 
 // MQTT
 const char* mqtt_server = "192.168.1.105";  // IP of the MQTT broker
@@ -35,39 +35,23 @@ void setup() {
 
 void loop() {
   connect_MQTT();
-  Serial.setTimeout(2000);
+  Serial.setTimeout(1000);
   
   float h = dht.readHumidity();
-  delay(3000);
+  delay(1000);
   float t = dht.readTemperature();
-
-  // MQTT can only transmit strings
-  String hs="Hum: "+String((float)h)+" % ";
-  String ts="Temp: "+String((float)t)+" C ";
+  delay(1000);
 
   // PUBLISH to the MQTT Broker (topic = Temperature, defined at the beginning)
-  if (client.publish(temperature_topic, String(t).c_str())) {
-    
-  }
-  // Again, client.publish will return a boolean value depending on whether it succeded or not.
-  // If the message failed to send, we will try again, as the connection may have broken.
-  else {
-    client.connect(clientID, mqtt_username, mqtt_password);
-    delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-    client.publish(temperature_topic, String(t).c_str());
-  }
-
-  // PUBLISH to the MQTT Broker (topic = Humidity, defined at the beginning)
-  if (client.publish(humidity_topic, String(h).c_str())) {
-    
-  }
-  // Again, client.publish will return a boolean value depending on whether it succeded or not.
-  // If the message failed to send, we will try again, as the connection may have broken.
-  else {
-    client.connect(clientID, mqtt_username, mqtt_password);
-    delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-    client.publish(humidity_topic, String(h).c_str());
-  }
+  
+  client.connect(clientID, mqtt_username, mqtt_password);
+  delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+  client.publish(temperature_topic, String(t).c_str());
+  delay(100);
+  client.connect(clientID, mqtt_username, mqtt_password);
+  delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+  client.publish(humidity_topic, String(h).c_str());
+  
   client.disconnect();  // disconnect from the MQTT broker
-  delay(1000*120);       // print new values every 1 Minute
+  delay(1000*60);       // print new values every 1 Minute
 }
