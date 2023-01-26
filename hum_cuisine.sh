@@ -1,3 +1,4 @@
+#!/bin/sh
 # launcher.sh
 
 sleep 60
