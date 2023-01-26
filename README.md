@@ -1,9 +1,13 @@
 
 
 # temp_esp01_sensors
+
+
 "Based on ESP01 device and DHT11 sensor for send temperature and humidity value on raspberry Pi 3(RPI3) Mosquitto broker, get the value on InfluxDB and see all on Grafana by any connect devices.
 
-When the mqtt message arrived on the broker it will be intercept by mqtt_subscriber_ for_influxdb, it will parse it and store the data on local to the RPI3 Influxdb database.
+main.py = InfluxDB_Mosquitto_Subscriber
+
+When the mqtt message arrived on the broker it will be intercept by InfluxDB_Mosquitto_Subscriber, it will parse it and store the data on local to the RPI3 Influxdb database.
 Then a local Grafana server, show the value on any connected devices with 1" timeframe.
 
 The RPI3 run at 22%CPU of this total capacity and 31%RAM of this total capacity.
@@ -12,7 +16,7 @@ It's absolutely necessary to connect an external storage for run the DB.
 You have to modify the influxdb conf file for specify the path storage on your external storage.
 Becarefull to accord the good right r and w for the external storage.
 
-I add a Cronjob (crontab -e) who run a script with the main from mqtt_subscriber_for_influxdb.
+I add a Cronjob (crontab -e) who run a script with the main from InfluxDB_Mosquitto_Subscriber.
 The best solution is create services wo run at start (man systemctl).
 
 I had install a telegraf server too for show the RPI3 metrics in live.
